@@ -69,6 +69,7 @@ function MainScreen(props) {
         return new Promise(resolve => setTimeout(resolve, ms));
     };
 
+    // Wait for opencv WASM library to load
     const waitForArucoToLoad = async () => {
         try {
             new cv.aruco_Dictionary(cv.DICT_4X4_50);
@@ -105,6 +106,7 @@ function MainScreen(props) {
 
         const detectCharucoBoard = async () => {
             const imageSrc = webcamRef?.current?.getScreenshot();
+            
             if (!imageSrc) return;
 
             return new Promise((resolve) => {
@@ -398,13 +400,12 @@ function MainScreen(props) {
                                     capturing
                                         ?
                                         <>
-                                            {/* mirrored */}
                                             <Webcam
                                                 videoConstraints={{
                                                     facingMode: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'environment' : 'front'
                                                 }}
-                                                ref={webcamRef}
-                                                
+                                                ref={webcamRef}    
+                                                mirrored                                            
                                                 screenshotFormat="image/jpeg"
                                                 onUserMedia={() => setWebcamReady(true)}
 
