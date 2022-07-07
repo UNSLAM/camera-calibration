@@ -399,6 +399,9 @@ function MainScreen(props) {
                                         ?
                                         <>
                                             <Webcam
+                                                videoConstraints={{
+                                                    facingMode: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'environment' : 'front'
+                                                }}
                                                 ref={webcamRef}
                                                 mirrored
                                                 screenshotFormat="image/jpeg"
