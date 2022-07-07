@@ -7,12 +7,12 @@ import Webcam from "react-webcam";
 import CameraFlashingGif from "./assets/camera-flashing.gif";
 import {ReactComponent as InstructionsIcon} from "./assets/instructions.svg";
 import {ReactComponent as DownloadCircularButtonIcon} from "./assets/download-circular-button.svg";
-import LoadingOverlay from 'react-loading-overlay';
+// import LoadingOverlay from 'react-loading-overlay';
 
 const fileDownload = require('js-file-download');
 
-function MainScreen(props) {
 
+function MainScreen(props) {    
     const [cvArucoLoaded, setCVArucoLoaded] = useState(false);
     const [dictionary, setDictionary] = useState(null);
     const [board, setBoard] = useState(null);
@@ -78,13 +78,16 @@ function MainScreen(props) {
         }
     };
 
-    useEffect(async () => {
-        await waitForArucoToLoad();
-        const theDictionary = new cv.aruco_Dictionary(cv.DICT_4X4_50);
-        const theBoard = new cv.aruco_CharucoBoard(5, 7, 0.04, 0.02, theDictionary);
-        setDictionary(theDictionary);
-        setBoard(theBoard);
-        setCVArucoLoaded(true);
+    useEffect(() => {        
+        async function waitAruco() {
+            await waitForArucoToLoad();
+            const theDictionary = new cv.aruco_Dictionary(cv.DICT_4X4_50);
+            const theBoard = new cv.aruco_CharucoBoard(5, 7, 0.04, 0.02, theDictionary);
+            setDictionary(theDictionary);
+            setBoard(theBoard);
+            setCVArucoLoaded(true);
+        }
+        waitAruco();      
     }, []);
 
     const alertBoardNotFound = () => {
@@ -406,13 +409,16 @@ function MainScreen(props) {
                                             {
                                                 webcamReady
                                                     ?
-                                                    <LoadingOverlay
-                                                        active={calibrating}
-                                                        spinner
-                                                        text='Cargando...'
-                                                    >
-                                                        <canvas className="visionImage" ref={visionImgRef}/>
-                                                    </LoadingOverlay>
+                          
+                                                    <canvas className="visionImage" ref={visionImgRef}/>
+                                         
+                                                    // <LoadingOverlay
+                                                    //     active={calibrating}
+                                                    //     spinner
+                                                    //     text='Cargando...'
+                                                    // >
+                                                    //     <canvas className="visionImage" ref={visionImgRef}/>
+                                                    // </LoadingOverlay>
                                                     :
                                                     <Spinner animation="border" variant="primary" role="status">
                                                         <span className="visually-hidden">Loading...</span>
