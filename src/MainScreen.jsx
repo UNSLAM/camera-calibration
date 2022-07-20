@@ -434,7 +434,7 @@ function MainScreen(props) {
                                                     <Fragment>
                                                         <canvas className="visionImage" ref={visionImgRef} />
                                                         <Button
-                                                            className="border border-dark capture-image-button"
+                                                            className="border border-dark capture-image-button d-lg-none"
                                                             variant="primary"
                                                             onClick={capture}
                                                         >
@@ -505,7 +505,7 @@ function MainScreen(props) {
                             {/* Instrucciones */}
                         </Row>
                         {/* Buttons */}
-                        <Row className={(webcamReady ? "bg-dark bg-opacity-10" : "") + " p-4 mt-2 d-flex flex-row justify-content-center"}>
+                        <Row className={(webcamReady ? "bg-dark bg-opacity-10" : "") + " p-4 mt-2 d-flex flex-row justify-content-between"}>
                             {
                                 webcamReady
                                     ?
