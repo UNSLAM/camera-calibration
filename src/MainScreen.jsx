@@ -1,4 +1,4 @@
-import './MainScreen.css';
+import './MainScreen.scss';
 import {useEffect, useRef, useState} from "react";
 import cv from "@techstark/opencv-js";
 import {Button, Col, Container, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
@@ -359,31 +359,29 @@ function MainScreen(props) {
     };
 
     return (
-        <Container fluid className="main-screen-container">
+        <Container fluid>
             {
                 cvArucoLoaded
                     ?
                     <>
-                        <Row className="main-screen-row-1 bg-secondary bg-opacity-10">
+                        <Row className="main-screen-row-1 bg-secondary bg-opacity-10 mb-2">
                             <Col className="fill-full-space d-flex justify-content-center align-items-center">
                                 <h1>Calibrador de Cámaras</h1>
                             </Col>
                         </Row>
-                        <Row className="main-screen-row-2">
-                            <Col className="main-screen-row-2-col-1">
+                        <Row>
+                            <Col sm={12} lg={3}>
                                 {
                                     webcamReady &&
                                     <>
-                                        <Row className="main-screen-row-2-col-1-row-1">
-                                            <Col className="fill-full-space text-center">
+                                        <Row className='d-flex flex-column align-items-center'>
+                                            <Col sm={8} className="text-center">
                                                 <div className="pictures-taken-container">
                                                     <h5>Fotografías tomadas:</h5>
                                                     <h5 className="bg-dark bg-opacity-10">{picturesTaken.length}</h5>
                                                 </div>
                                             </Col>
-                                        </Row>
-                                        <Row className="main-screen-row-2-col-1-row-2">
-                                            <Col className="fill-full-space text-center">
+                                            <Col sm={8} className="text-center">
                                                 <div className="calibration-error-container">
                                                     <h5>Error de calibración:</h5>
                                                     <h5 className="bg-dark bg-opacity-10">{rmsReProjectionError}</h5>
@@ -394,7 +392,7 @@ function MainScreen(props) {
                                 }
                             </Col>
                             <Col
-                                className="main-screen-row-2-col-2 fill-full-space d-flex justify-content-center
+                                className="d-flex justify-content-center
                                 align-items-center">
                                 {
                                     capturing
@@ -444,13 +442,13 @@ function MainScreen(props) {
                                         </div>
                                 }
                             </Col>
-                            <Col className="main-screen-row-2-col-3">
+                            <Col sm={2} className="d-none d-lg-block">
                                 {
                                     webcamReady &&
                                     <>
-                                        <Row className="main-screen-row-2-col-3-row-1">
+                                        <Row>
                                             <Col
-                                                className="fill-full-space d-flex justify-content-center
+                                                className="d-flex justify-content-center
                                                 align-items-center">
                                                 <h6>Instrucciones</h6>
                                                 <InstructionsIcon
@@ -460,9 +458,9 @@ function MainScreen(props) {
                                             </Col>
                                         </Row>
                                         <canvas className="charuco-image" ref={charucoImgRef} id='charuco-board'/>
-                                        <Row className="main-screen-row-2-col-3-row-2">
+                                        <Row>
                                             <Col
-                                                className="fill-full-space d-flex justify-content-center
+                                                className="d-flex justify-content-center
                                                 align-items-center">
                                                 <h6>Descargar tablero</h6>
                                                 <DownloadCircularButtonIcon
@@ -475,36 +473,28 @@ function MainScreen(props) {
                                 }
                             </Col>
                         </Row>
-                        <Row className={(webcamReady ? "bg-dark bg-opacity-10" : "") + " main-screen-row-3"}>
+                        {/* Buttons */}
+                        <Row className={(webcamReady ? "bg-dark bg-opacity-10" : "") + " p-4 mt-2 d-flex flex-row justify-content-center"}>
                             {
                                 webcamReady
                                     ?
                                     <>
-                                        <Col
-                                            className="main-screen-row-3-col-1 fill-full-space d-flex
-                                            justify-content-center align-items-center">
+                                        <Col sm={12}
+                                            className="d-flex flex-row justify-content-center">
                                             <Button
-                                                className="cancel-calibration-button border border-dark"
+                                                className="border border-dark"
                                                 variant="danger"
                                                 onClick={cancelCapture}
                                             >
                                                 Cancelar calibración
                                             </Button>
-                                        </Col>
-                                        <Col
-                                            className="main-screen-row-3-col-1 fill-full-space d-flex
-                                            justify-content-center align-items-center">
                                             <Button
-                                                className="capture-image-button border border-dark"
+                                                className="border border-dark"
                                                 variant="primary"
                                                 onClick={capture}
                                             >
                                                 Capturar imagen
                                             </Button>
-                                        </Col>
-                                        <Col
-                                            className="main-screen-row-3-col-2 fill-full-space d-flex
-                                            justify-content-center align-items-center">
                                             {
                                                 disableFinishCalibrationButton()
                                                     ?
@@ -518,16 +508,15 @@ function MainScreen(props) {
                                                             </Tooltip>
                                                         }
                                                     >
-                                                        <span className="finish-calibration-button">
+                                                        <div className="finish-calibration-button">
                                                             <Button
-                                                                className={"fill-full-space button-disabled " +
-                                                                    "border border-dark"}
+                                                                className={"button-disabled border border-dark"}
                                                                 variant="success"
                                                                 disabled
                                                             >
                                                                 Finalizar
                                                             </Button>
-                                                        </span>
+                                                        </div>
                                                     </OverlayTrigger>
                                                     :
                                                     <Button
@@ -538,7 +527,7 @@ function MainScreen(props) {
                                                         Finalizar
                                                     </Button>
                                             }
-                                        </Col>
+                                        </Col> 
                                     </>
                                     :
                                     !capturing &&
@@ -547,6 +536,7 @@ function MainScreen(props) {
                                     </Col>
                             }
                         </Row>
+                        {/* Buttons */}
                     </>
                     :
                     <Row className="loader-row">

@@ -14,9 +14,10 @@
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.0",
     "react-dom": "^17.0.2",
-    "react-fade-in": "^2.0.1",    
+    "react-fade-in": "^2.0.1",
     "react-scripts": "5.0.1",
     "react-webcam": "^7.0.0",
+    "sass": "^1.53.0",
     "sweetalert2": "^11.3.4",
     "web-vitals": "^2.1.3"
   },
@@ -28,7 +29,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",    
+    "eject": "react-scripts eject",
     "postinstall": "copyfiles -f ./opencv/opencv.js ./node_modules/@techstark/opencv-js/dist && copyfiles -f ./webpack.config.js ./node_modules/react-scripts/config"
   },
   "eslintConfig": {

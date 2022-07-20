@@ -1,3 +1,8 @@
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins/_breakpoints';
+
+
 .main-screen-container {
     height: 100vh;
 }
@@ -85,20 +90,12 @@ video {
 }
 
 .finish-calibration-button {
-    width: 40%;
-    height: 40%;
+    /* width: 40%;
+    height: 40%; */
 }
 
 .button-disabled {
     pointer-events: none;
-}
-
-.pictures-taken-container {
-    padding-top: 40%;
-}
-
-.calibration-error-container {
-    padding-top: 30%;
 }
 
 .instructions-icon {
@@ -129,4 +126,27 @@ video {
 
 ol > li::marker {
     font-weight: bold;
+}
+
+canvas {
+    transform: scaleX(-1);
+}
+
+.pictures-taken-container {
+    padding-top: 40%;
+}
+
+.calibration-error-container {
+    padding-top: 30%;
+}
+
+@include media-breakpoint-down(md) { 
+    .pictures-taken-container {
+        padding-top: 3em;
+    }
+    
+    .calibration-error-container {
+        padding-top: 3em;
+        margin-bottom: 3em;
+    }
 }
