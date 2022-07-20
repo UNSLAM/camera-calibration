@@ -14,7 +14,7 @@
 video {
     position: absolute;
     z-index: -1;
-    top: -1000%;
+    visibility: hidden;
 }
 
 .inputImage {
