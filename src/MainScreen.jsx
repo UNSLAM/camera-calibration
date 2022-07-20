@@ -1,18 +1,19 @@
 import './MainScreen.scss';
-import {useEffect, useRef, useState} from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import cv from "@techstark/opencv-js";
-import {Button, Col, Container, OverlayTrigger, Row, Spinner, Tooltip} from "react-bootstrap";
+import { Button, Col, Container, OverlayTrigger, Row, Spinner, Tooltip } from "react-bootstrap";
 import Swal from "sweetalert2";
 import Webcam from "react-webcam";
 import CameraFlashingGif from "./assets/camera-flashing.gif";
-import {ReactComponent as InstructionsIcon} from "./assets/instructions.svg";
-import {ReactComponent as DownloadCircularButtonIcon} from "./assets/download-circular-button.svg";
+import { ReactComponent as InstructionsIcon } from "./assets/instructions.svg";
+import { ReactComponent as DownloadCircularButtonIcon } from "./assets/download-circular-button.svg";
+import { useForm } from "react-hook-form";
 // import LoadingOverlay from 'react-loading-overlay';
 
 const fileDownload = require('js-file-download');
 
 
-function MainScreen(props) {    
+function MainScreen(props) {
     const [cvArucoLoaded, setCVArucoLoaded] = useState(false);
     const [dictionary, setDictionary] = useState(null);
     const [board, setBoard] = useState(null);
@@ -37,6 +38,17 @@ function MainScreen(props) {
     const allCharucoCornersRef = useRef([]);
     const allCharucoIdsRef = useRef([]);
     const picturesTakenRef = useRef([]);
+
+    const [width, setWidth] = useState(1280);
+    const [height, setHeight] = useState(720);
+
+    const { register, handleSubmit } = useForm();
+
+    const submit = (data) => {
+        setWidth(data.width);
+        setHeight(data.height);
+        startCapture();
+    };
 
     const cleanAllVariables = (isCancel = false) => {
         if (!isCancel) {
@@ -79,7 +91,7 @@ function MainScreen(props) {
         }
     };
 
-    useEffect(() => {        
+    useEffect(() => {
         async function waitAruco() {
             await waitForArucoToLoad();
             const theDictionary = new cv.aruco_Dictionary(cv.DICT_4X4_50);
@@ -88,7 +100,7 @@ function MainScreen(props) {
             setBoard(theBoard);
             setCVArucoLoaded(true);
         }
-        waitAruco();      
+        waitAruco();
     }, []);
 
     const alertBoardNotFound = () => {
@@ -106,7 +118,7 @@ function MainScreen(props) {
 
         const detectCharucoBoard = async () => {
             const imageSrc = webcamRef?.current?.getScreenshot();
-            
+
             if (!imageSrc) return;
 
             return new Promise((resolve) => {
@@ -370,6 +382,7 @@ function MainScreen(props) {
                             </Col>
                         </Row>
                         <Row>
+                            {/* Stats */}
                             <Col sm={12} lg={3}>
                                 {
                                     webcamReady &&
@@ -391,8 +404,11 @@ function MainScreen(props) {
                                     </>
                                 }
                             </Col>
-                            <Col
-                                className="d-flex justify-content-center
+                            {/* Stats */}
+
+                            {/* Video and canvas */}
+                            <Col lg={6}
+                                className="d-flex justify-content-center position-relative
                                 align-items-center">
                                 {
                                     capturing
@@ -400,49 +416,63 @@ function MainScreen(props) {
                                         <>
                                             <Webcam
                                                 videoConstraints={{
+                                                    height: height,
+                                                    width: width,
                                                     facingMode: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'environment' : 'front'
                                                 }}
-                                                ref={webcamRef}    
-                                                mirrored                                            
+                                                ref={webcamRef}
+                                                mirrored
                                                 screenshotFormat="image/jpeg"
                                                 onUserMedia={() => setWebcamReady(true)}
 
                                             />
-                                            <img className="inputImage" alt="input" ref={imgRef}/>
+                                            <img className="inputImage" alt="input" ref={imgRef} />
                                             {
                                                 webcamReady
                                                     ?
-                          
-                                                    <canvas className="visionImage" ref={visionImgRef}/>
-                                         
-                                                    // <LoadingOverlay
-                                                    //     active={calibrating}
-                                                    //     spinner
-                                                    //     text='Cargando...'
-                                                    // >
-                                                    //     <canvas className="visionImage" ref={visionImgRef}/>
-                                                    // </LoadingOverlay>
+
+                                                    <Fragment>
+                                                        <canvas className="visionImage" ref={visionImgRef} />
+                                                        <Button
+                                                            className="border border-dark capture-image-button"
+                                                            variant="primary"
+                                                            onClick={capture}
+                                                        >
+                                                            Capturar imagen
+                                                        </Button>
+                                                    </Fragment>
                                                     :
                                                     <Spinner animation="border" variant="primary" role="status">
                                                         <span className="visually-hidden">Loading...</span>
                                                     </Spinner>
                                             }
+
+
                                         </>
                                         :
                                         <div
-                                            className="start-capturing-button-container d-flex justify-content-center
+                                            className="start-capturing-button-container d-flex flex-column justify-content-center
                                             align-items-center bg-dark bg-opacity-10">
+                                            <p> Resolución de la cámara</p>
+
+                                            <input placeholder='Ancho' className='mb-2' {...register("width", { required: true })} />
+
+                                            <input placeholder='Alto' className='mb-2' {...register("height", { required: true })} />
+
                                             <Button
                                                 className="border border-dark"
                                                 variant="primary"
-                                                onClick={startCapture}
+                                                onClick={handleSubmit(submit)}
                                             >
                                                 Comenzar
                                             </Button>
                                         </div>
                                 }
                             </Col>
-                            <Col sm={2} className="d-none d-lg-block">
+                            {/* Video and canvas */}
+
+                            {/* Instrucciones */}
+                            <Col sm={2} lg={3} className="d-none d-lg-block">
                                 {
                                     webcamReady &&
                                     <>
@@ -457,7 +487,7 @@ function MainScreen(props) {
                                                 />
                                             </Col>
                                         </Row>
-                                        <canvas className="charuco-image" ref={charucoImgRef} id='charuco-board'/>
+                                        <canvas className="charuco-image" ref={charucoImgRef} id='charuco-board' />
                                         <Row>
                                             <Col
                                                 className="d-flex justify-content-center
@@ -472,6 +502,7 @@ function MainScreen(props) {
                                     </>
                                 }
                             </Col>
+                            {/* Instrucciones */}
                         </Row>
                         {/* Buttons */}
                         <Row className={(webcamReady ? "bg-dark bg-opacity-10" : "") + " p-4 mt-2 d-flex flex-row justify-content-center"}>
@@ -489,7 +520,7 @@ function MainScreen(props) {
                                                 Cancelar calibración
                                             </Button>
                                             <Button
-                                                className="border border-dark"
+                                                className="border border-dark d-none d-lg-block"
                                                 variant="primary"
                                                 onClick={capture}
                                             >
@@ -527,12 +558,12 @@ function MainScreen(props) {
                                                         Finalizar
                                                     </Button>
                                             }
-                                        </Col> 
+                                        </Col>
                                     </>
                                     :
                                     !capturing &&
                                     <Col className="fill-full-space d-flex justify-content-center align-items-center">
-                                        <img src={CameraFlashingGif} alt="camera_gif" className="camera-flashing-gif"/>
+                                        <img src={CameraFlashingGif} alt="camera_gif" className="camera-flashing-gif" />
                                     </Col>
                             }
                         </Row>
