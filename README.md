@@ -1,6 +1,6 @@
 # Calibrador de Cámaras
 
-### Prequisitos
+### Prerrequisitos
 
 Ejecutar `npm install`.
 
